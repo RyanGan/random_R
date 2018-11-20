@@ -1,0 +1,20 @@
+---
+title: "Title X PDF Scrape"
+author: "Ryan Gan"
+date: "11/20/2018"
+output: html_document
+---
+
+
+```{r libraries}
+# using pdftools library 
+library(pdftools)
+```
+
+Downloading PDF from link. It will save in the working directory.
+```{r download_pdf}
+# downloading the file to working directory
+download.file(paste0('https://www.hhs.gov/opa/sites/default/files/',
+                     'Title-X-Family-Planning-Directory-September2018.pdf'))
+```
+
