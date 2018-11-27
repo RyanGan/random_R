@@ -9,12 +9,57 @@ output: html_document
 ```{r libraries}
 # using pdftools library 
 library(pdftools)
+# general tidyverse package for cleaning and processing data
+library(tidyverse)
 ```
 
-Downloading PDF from link. It will save in the working directory.
-```{r download_pdf}
+Downloading PDF from link. It will save in the working directory. This code chunk only needs to be run once since it will download the file from the HTML link. Alternatively, you could download the file and just open it from the directory you saved it in. I also use this function, paste0, that allows me to wrap strings of text over multiple lines. I've sent the R markdown chunk to eval = F so it doesn't run every time this file is processed.
+
+```{r download_pdf, eval = F}
 # downloading the file to working directory
-download.file(paste0('https://www.hhs.gov/opa/sites/default/files/',
+download.file(url = paste0('https://www.hhs.gov/opa/sites/default/files/',
+                     'Title-X-Family-Planning-Directory-September2018.pdf'),
+              destfile = paste0('./scraping/Title-X-Family-Planning',
+                                '-Directory-September2018.pdf'))
+```
+
+Now that the file is downloaded, we will read in the PDF text using the pdf_text function from the pdftools library. 
+
+```{r read_pdf_text}
+pdf_text <- pdf_text(paste0('./scraping/',
                      'Title-X-Family-Planning-Directory-September2018.pdf'))
+```
+
+It's good to view first couple lines of the pdf_text object we created. We will need to find patterns to help us process the tables. The pdf_text object has 190 elements, and I'm not sure how it breaks out.
+
+```{r explore_lines}
+# subset first couple lines
+first_elements <- pdf_text[1:2]
+
+print(first_elements)
+```
+
+Okay, it looks like the first element is the title page, and contains only two pieces of text: Title X Family Planning Directory and September 2018. The '\n' is how text processors know how to return/start a new line. Element two contains information about the states/territories in each region.  
+
+The next thing I want to do is take each element and read each line.
+
+```{r}
+grantee_table <- read_lines(pdf_text[3]) 
+
+# valid table row function
+grepl('Title X Directory - September 2018', grantee_table[1]) 
+
+
+test <- map(read_lines(pdf_text[4]), function(line){
+  # if line contains word 'Grantee'
+  if(grepl('Title X Directory', line)==FALSE){
+    return(line)
+  }
+})
+
+
+nchar(test[2])
+
+str_split(test[3], pattern = '\t')
 ```
 
