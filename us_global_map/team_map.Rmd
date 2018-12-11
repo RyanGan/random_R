@@ -1,0 +1,28 @@
+---
+title: "Example US State and Continent Maps using SF"
+author: "Ryan Gan"
+date: "12/11/2018"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+```
+
+
+```{r read_shapefiles}
+# reading countries shapefile
+world <- st_read('./Countries_WGS84/Countries_WGS84.shp')
+
+# reading state shapeifle
+states <- st_read('./US_States/US_States.shp')
+```
+
+Map of states and countries.
+```{r map}
+ggplot() +
+  geom_sf(data=world) +
+  geom_sf(data=states)
+```
+

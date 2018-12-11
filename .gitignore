@@ -5,3 +5,9 @@
 
 # ignore Rproject
 *.Rproj
+
+*.DS_Store
+
+# ignore shapefile folders
+us_global_map/Countries_WGS84/
+us_global_map/US_States/
